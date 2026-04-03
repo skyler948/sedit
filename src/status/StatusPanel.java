@@ -1,13 +1,19 @@
 package status;
 
+import display.Display;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 
 public class StatusPanel extends JPanel {
 
-    private JLabel status;
+    private JLabel currentFileStatus;
+    private JLabel fontSizeStatus;
 
-    public StatusPanel() {
+    private Display display;
+
+    public StatusPanel(Display display) {
+        this.display = display;
         createStatusBar();
     }
 
@@ -15,19 +21,27 @@ public class StatusPanel extends JPanel {
         setBorder(new BevelBorder(BevelBorder.LOWERED));
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        status = new JLabel();
-        status.setHorizontalAlignment(SwingConstants.LEFT);
+        currentFileStatus = new JLabel();
+        currentFileStatus.setHorizontalAlignment(SwingConstants.LEFT);
         setDefaultStatus();
 
-        add(status);
+        fontSizeStatus = new JLabel();
+        setFontSizeStatus();
+
+        add(currentFileStatus);
+        add(fontSizeStatus);
     }
 
-    public void setStatus(String status) {
-        this.status.setText(" " + status);
+    public void setCurrentFileStatus(String currentFileStatus) {
+        this.currentFileStatus.setText(" " + currentFileStatus);
+    }
+
+    public void setFontSizeStatus() {
+        fontSizeStatus.setText(" | " + display.getTextSize());
     }
 
     public void setDefaultStatus() {
-        this.status.setText(" < unnamed >");
+        this.currentFileStatus.setText(" < unnamed >");
     }
 
 }

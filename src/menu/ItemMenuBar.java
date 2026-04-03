@@ -11,6 +11,7 @@ public class ItemMenuBar extends JMenuBar {
 
     public ItemMenuBar() {
         createMenuBar();
+        createMenuBarAccelerator();
     }
 
     private void createMenuBar() {
@@ -49,7 +50,6 @@ public class ItemMenuBar extends JMenuBar {
         items.add(new JMenuItem[]{ // Settings
                 new JCheckBoxMenuItem("Show Menu Bar", true),
                 new JCheckBoxMenuItem("Show Status Panel", true),
-                new JMenuItem("Configure Keybinds"),
                 new JMenuItem("Configure Style")
         });
 
@@ -67,12 +67,23 @@ public class ItemMenuBar extends JMenuBar {
         }
     }
 
-    private JMenuItem[] getItems(Menu menu) {
-        return items.get(menu.id);
+    private void createMenuBarAccelerator() {
+        for (Item item : Item.values()) {
+            if (item.key == null) continue;
+            setItemAccelerator(item);
+        }
     }
 
-    public JMenuItem getItem(Menu menu, Item item) {
-        return getItems(menu)[item.id];
+    private JMenuItem[] getItems(Item item) {
+        return items.get(item.menu.id);
+    }
+
+    public JMenuItem getItem(Item item) {
+        return getItems(item)[item.id];
+    }
+
+    private void setItemAccelerator(Item item) {
+        getItem(item).setAccelerator(item.key);
     }
 
 }

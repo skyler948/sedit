@@ -1,35 +1,41 @@
 package menu;
 
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+
 public enum Item {
 
-    NEW(0),
-    OPEN(1),
-    SAVE(2),
-    SAVE_AS(3),
-    QUIT(4),
+    NEW(0, KeyStroke.getKeyStroke("control N"), Menu.FILE),
+    OPEN(1, KeyStroke.getKeyStroke("control O"), Menu.FILE),
+    SAVE(2, KeyStroke.getKeyStroke("control S"), Menu.FILE),
+    SAVE_AS(3, KeyStroke.getKeyStroke("control shift S"), Menu.FILE),
+    QUIT(4, KeyStroke.getKeyStroke("control Q"), Menu.FILE),
 
-    UNDO(0),
-    REDO(1),
-    CUT(2),
-    COPY(3),
-    PASTE(4),
-    FIND(5),
+    UNDO(0, KeyStroke.getKeyStroke("control Z"), Menu.EDIT),
+    REDO(1, KeyStroke.getKeyStroke("control shift Z"), Menu.EDIT),
+    CUT(2, KeyStroke.getKeyStroke("control X"), Menu.EDIT),
+    COPY(3, KeyStroke.getKeyStroke("control C"), Menu.EDIT),
+    PASTE(4, KeyStroke.getKeyStroke("control V"), Menu.EDIT),
+    FIND(5, KeyStroke.getKeyStroke("control F"), Menu.EDIT),
 
-    ZOOM_IN(0),
-    ZOOM_OUT(1),
+    ZOOM_IN(0, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_DOWN_MASK), Menu.VIEW),
+    ZOOM_OUT(1, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK), Menu.VIEW),
 
-    SHOW_MENU_BAR(0),
-    SHOW_STATUS_PANEL(1),
-    CONFIGURE_KEYBINDS(2),
-    STYLE_KEYBINDS(3),
+    SHOW_MENU_BAR(0, null, Menu.SETTINGS),
+    SHOW_STATUS_PANEL(1, null, Menu.SETTINGS),
+    CONFIGURE_STYLE(2, null, Menu.SETTINGS),
 
-    REPORT_BUG(0),
-    ABOUT_SEDIT(1);
+    REPORT_BUG(0, null, Menu.HELP),
+    ABOUT_SEDIT(1, null, Menu.HELP);
 
     public final int id;
+    public final KeyStroke key;
+    public final Menu menu;
 
-    Item(int id) {
+    Item(int id, KeyStroke key, Menu menu) {
         this.id = id;
+        this.key = key;
+        this.menu = menu;
     }
 
 }

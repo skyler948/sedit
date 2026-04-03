@@ -23,8 +23,14 @@ public class Display {
 
     private MenuBarHandler menuBarHandler;
 
+    private static final String DEFAULT_NAME = "Arial";
+    private static final byte DEFAULT_SIZE = 12;
+    private Font textFont;
+
     public Display(int width, int height) {
         setDimensions(width, height);
+
+        textFont = new Font(DEFAULT_NAME, Font.PLAIN, DEFAULT_SIZE);
 
         createDisplay();
     }
@@ -51,17 +57,18 @@ public class Display {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setTabSize(1);
+        textArea.setFont(textFont);
 
         scrollPane = new JScrollPane(textArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
         frame.add(scrollPane);
 
-        statusBar = new StatusPanel();
+        statusBar = new StatusPanel(this);
 
         frame.add(statusBar, BorderLayout.SOUTH);
 
-        menuBarHandler = new MenuBarHandler(menuBar, textArea, statusBar);
+        menuBarHandler = new MenuBarHandler(this);
     }
 
     public void setDimensions(int width, int height) {
@@ -72,6 +79,37 @@ public class Display {
         if (frame != null) {
             frame.setSize(dimension);
         }
+    }
+
+    public void changeFontSize(int amount) {
+        int newSize = Math.max(2, textFont.getSize() + amount);
+        textFont = new Font(DEFAULT_NAME, Font.PLAIN, newSize);
+        textArea.setFont(textFont);
+        statusBar.setFontSizeStatus();
+    }
+
+    public int getTextSize() {
+        return textFont.getSize();
+    }
+
+    public ItemMenuBar getMenuBar() {
+        return menuBar;
+    }
+
+    public JTextArea getTextArea() {
+        return textArea;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    public StatusPanel getStatusBar() {
+        return statusBar;
+    }
+
+    public MenuBarHandler getMenuBarHandler() {
+        return menuBarHandler;
     }
 
 }

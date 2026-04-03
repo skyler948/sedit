@@ -1,6 +1,6 @@
 package menu;
 
-import status.StatusPanel;
+import display.Display;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,33 +13,29 @@ import java.util.Scanner;
 
 public class MenuBarHandler {
 
-    private ItemMenuBar menuBar;
-
-    private JTextArea textArea;
-
-    private StatusPanel statusBar;
+    private Display display;
 
     private File currentFile;
 
-    public MenuBarHandler(ItemMenuBar menuBar, JTextArea textArea, StatusPanel statusBar) {
-        this.menuBar = menuBar;
-        this.textArea = textArea;
-        this.statusBar = statusBar;
+    private static final byte ZOOM = 2;
+
+    public MenuBarHandler(Display display) {
+        this.display = display;
 
         setMenuActions();
     }
 
     private void setMenuActions() {
-        menuBar.getItem(Menu.FILE, Item.NEW).addActionListener(new ActionListener() {
+        display.getMenuBar().getItem(Item.NEW).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea.setText("");
+                display.getTextArea().setText("");
                 currentFile = null;
-                statusBar.setDefaultStatus();
+                display.getStatusBar().setDefaultStatus();
             }
         });
 
-        menuBar.getItem(Menu.FILE, Item.OPEN).addActionListener(new ActionListener() {
+        display.getMenuBar().getItem(Item.OPEN).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser open = new JFileChooser();
@@ -49,14 +45,14 @@ public class MenuBarHandler {
 
                     if (!currentFile.isFile()) return;
 
-                    statusBar.setStatus(currentFile.getName());
+                    display.getStatusBar().setCurrentFileStatus(currentFile.getName());
 
                     openFile();
                 }
             }
         });
 
-        menuBar.getItem(Menu.FILE, Item.SAVE).addActionListener(new ActionListener() {
+        display.getMenuBar().getItem(Item.SAVE).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser save;
@@ -65,7 +61,7 @@ public class MenuBarHandler {
 
                     if (save.showSaveDialog(save) == JFileChooser.APPROVE_OPTION) {
                         currentFile = save.getSelectedFile();
-                        statusBar.setStatus(currentFile.getName());
+                        display.getStatusBar().setCurrentFileStatus(currentFile.getName());
                     }
                 }
 
@@ -73,24 +69,38 @@ public class MenuBarHandler {
             }
         });
 
-        menuBar.getItem(Menu.FILE, Item.SAVE_AS).addActionListener(new ActionListener() {
+        display.getMenuBar().getItem(Item.SAVE_AS).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser save = new JFileChooser();
 
                 if (save.showSaveDialog(save) == JFileChooser.APPROVE_OPTION) {
                     currentFile = save.getSelectedFile();
-                    statusBar.setStatus(currentFile.getName());
+                    display.getStatusBar().setCurrentFileStatus(currentFile.getName());
 
                     saveFile();
                 }
             }
         });
 
-        menuBar.getItem(Menu.FILE, Item.QUIT).addActionListener(new ActionListener() {
+        display.getMenuBar().getItem(Item.QUIT).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+
+        display.getMenuBar().getItem(Item.ZOOM_IN).addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                display.changeFontSize(ZOOM);
+            }
+        });
+
+        display.getMenuBar().getItem(Item.ZOOM_OUT).addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                display.changeFontSize(-ZOOM);
             }
         });
     }
@@ -106,7 +116,7 @@ public class MenuBarHandler {
                 string.append("\n");
             }
 
-            textArea.setText(string.toString());
+            display.getTextArea().setText(string.toString());
 
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -118,7 +128,7 @@ public class MenuBarHandler {
         try {
             FileWriter writer = new FileWriter(currentFile);
 
-            writer.write(textArea.getText());
+            writer.write(display.getTextArea().getText());
 
             writer.close();
         } catch (IOException e) {
