@@ -1,45 +1,36 @@
 package display;
 
-import menu.ItemMenuBar;
-import menu.MenuBarHandler;
-import status.StatusPanel;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class Display {
+public abstract class Display {
 
-    private int width, height;
-    private Dimension dimension;
+    protected static final String DEFAULT_NAME = "Arial";
+    protected static final byte DEFAULT_SIZE = 12;
 
-    private JFrame frame;
+    protected Font textFont;
 
-    private ItemMenuBar menuBar;
+    protected int width, height;
+    protected Dimension dimension;
 
-    private JTextArea textArea;
-    private JScrollPane scrollPane;
+    protected String title = "Default Title";
+    protected int closeOperation;
 
-    private StatusPanel statusBar;
-
-    private MenuBarHandler menuBarHandler;
-
-    private static final String DEFAULT_NAME = "Arial";
-    private static final byte DEFAULT_SIZE = 12;
-    private Font textFont;
+    protected JFrame frame;
+    protected JPanel panel;
 
     public Display(int width, int height) {
         setDimensions(width, height);
 
         textFont = new Font(DEFAULT_NAME, Font.PLAIN, DEFAULT_SIZE);
-
-        createDisplay();
+        closeOperation = JFrame.DISPOSE_ON_CLOSE;
     }
 
-    private void createDisplay() {
-        frame = new JFrame("sedit");
+    public void createDisplay() {
+        frame = new JFrame(title);
 
         frame.setSize(dimension);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(closeOperation);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
@@ -48,28 +39,7 @@ public class Display {
         frame.setVisible(true);
     }
 
-    private void createDisplayElements() {
-        menuBar = new ItemMenuBar();
-
-        frame.setJMenuBar(menuBar);
-
-        textArea = new JTextArea();
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setTabSize(1);
-        textArea.setFont(textFont);
-
-        scrollPane = new JScrollPane(textArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
-        frame.add(scrollPane);
-
-        statusBar = new StatusPanel(this);
-
-        frame.add(statusBar, BorderLayout.SOUTH);
-
-        menuBarHandler = new MenuBarHandler(this);
-    }
+    public abstract void createDisplayElements();
 
     public void setDimensions(int width, int height) {
         this.width = Math.max(width, 200);
@@ -84,32 +54,43 @@ public class Display {
     public void changeFontSize(int amount) {
         int newSize = Math.max(2, textFont.getSize() + amount);
         textFont = new Font(DEFAULT_NAME, Font.PLAIN, newSize);
-        textArea.setFont(textFont);
-        statusBar.setFontSizeStatus();
+    }
+
+    public void resetFontSize() {
+        textFont = new Font(DEFAULT_NAME, Font.PLAIN, DEFAULT_SIZE);
     }
 
     public int getTextSize() {
         return textFont.getSize();
     }
 
-    public ItemMenuBar getMenuBar() {
-        return menuBar;
+    public Font getTextFont() {
+        return textFont;
     }
 
-    public JTextArea getTextArea() {
-        return textArea;
+    public int getWidth() {
+        return width;
     }
 
-    public JScrollPane getScrollPane() {
-        return scrollPane;
+    public int getHeight() {
+        return height;
     }
 
-    public StatusPanel getStatusBar() {
-        return statusBar;
+    public Dimension getDimension() {
+        return dimension;
     }
 
-    public MenuBarHandler getMenuBarHandler() {
-        return menuBarHandler;
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    public boolean isDisplayOpen() {
+        if (frame == null) return false;
+        return frame.isShowing();
     }
 
 }

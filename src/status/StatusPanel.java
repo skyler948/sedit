@@ -1,6 +1,6 @@
 package status;
 
-import display.Display;
+import display.EditorDisplay;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -10,10 +10,10 @@ public class StatusPanel extends JPanel {
     private JLabel currentFileStatus;
     private JLabel fontSizeStatus;
 
-    private Display display;
+    private EditorDisplay editorDisplay;
 
-    public StatusPanel(Display display) {
-        this.display = display;
+    public StatusPanel(EditorDisplay editorDisplay) {
+        this.editorDisplay = editorDisplay;
         createStatusBar();
     }
 
@@ -37,7 +37,7 @@ public class StatusPanel extends JPanel {
     }
 
     public void setFontSizeStatus() {
-        fontSizeStatus.setText(" | " + display.getTextSize());
+        fontSizeStatus.setText(" | " + editorDisplay.getTextSize());
     }
 
     public void setDefaultStatus() {

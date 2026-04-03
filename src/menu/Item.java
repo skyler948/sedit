@@ -20,10 +20,10 @@ public enum Item {
 
     ZOOM_IN(0, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_DOWN_MASK), Menu.VIEW),
     ZOOM_OUT(1, KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK), Menu.VIEW),
+    RESET_ZOOM(2, KeyStroke.getKeyStroke(KeyEvent.VK_0, KeyEvent.CTRL_DOWN_MASK), Menu.VIEW),
 
-    SHOW_MENU_BAR(0, null, Menu.SETTINGS),
-    SHOW_STATUS_PANEL(1, null, Menu.SETTINGS),
-    CONFIGURE_STYLE(2, null, Menu.SETTINGS),
+    SHOW_STATUS_PANEL(0, null, Menu.SETTINGS),
+    CONFIGURE_STYLE(1, null, Menu.SETTINGS),
 
     REPORT_BUG(0, null, Menu.HELP),
     ABOUT_SEDIT(1, null, Menu.HELP);

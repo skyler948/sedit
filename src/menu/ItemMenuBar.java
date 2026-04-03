@@ -44,11 +44,11 @@ public class ItemMenuBar extends JMenuBar {
 
         items.add(new JMenuItem[]{ // View
                 new JMenuItem("Zoom In"),
-                new JMenuItem("Zoom Out")
+                new JMenuItem("Zoom Out"),
+                new JMenuItem("Reset Zoom")
         });
 
         items.add(new JMenuItem[]{ // Settings
-                new JCheckBoxMenuItem("Show Menu Bar", true),
                 new JCheckBoxMenuItem("Show Status Panel", true),
                 new JMenuItem("Configure Style")
         });
