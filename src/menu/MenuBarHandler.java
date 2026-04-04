@@ -30,7 +30,7 @@ public class MenuBarHandler {
     public MenuBarHandler(EditorDisplay editorDisplay) {
         this.editorDisplay = editorDisplay;
         aboutDisplay = new AboutDisplay(380, 175);
-        findDisplay = new FindDisplay(480, 360);
+        findDisplay = new FindDisplay(480, 155, editorDisplay);
         configDisplay = new ConfigDisplay(900, 500);
 
         setMenuActions();
