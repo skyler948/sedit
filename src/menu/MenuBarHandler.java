@@ -37,163 +37,93 @@ public class MenuBarHandler {
     }
 
     private void setMenuActions() {
-        editorDisplay.getMenuBar().getItem(Item.NEW).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.getTextArea().setText("");
-                currentFile = null;
-                editorDisplay.getStatusBar().setDefaultStatus();
+        editorDisplay.getMenuBar().getItem(Item.NEW).addActionListener(e -> {
+            editorDisplay.getTextArea().setText("");
+            currentFile = null;
+            editorDisplay.getStatusBar().setDefaultStatus();
+        });
+
+        editorDisplay.getMenuBar().getItem(Item.OPEN).addActionListener(e -> {
+            JFileChooser open = new JFileChooser();
+
+            if (open.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
+                currentFile = open.getSelectedFile();
+
+                if (!currentFile.isFile()) return;
+
+                editorDisplay.getStatusBar().setCurrentFileStatus(currentFile.getName());
+
+                openFile();
             }
         });
 
-        editorDisplay.getMenuBar().getItem(Item.OPEN).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser open = new JFileChooser();
+        editorDisplay.getMenuBar().getItem(Item.SAVE).addActionListener(e -> {
+            JFileChooser save;
+            if (currentFile == null) {
+                save = new JFileChooser();
 
-                if (open.showOpenDialog(open) == JFileChooser.APPROVE_OPTION) {
-                    currentFile = open.getSelectedFile();
-
-                    if (!currentFile.isFile()) return;
-
+                if (save.showSaveDialog(save) == JFileChooser.APPROVE_OPTION) {
+                    currentFile = save.getSelectedFile();
                     editorDisplay.getStatusBar().setCurrentFileStatus(currentFile.getName());
-
-                    openFile();
                 }
             }
+
+            saveFile();
         });
 
-        editorDisplay.getMenuBar().getItem(Item.SAVE).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser save;
-                if (currentFile == null) {
-                    save = new JFileChooser();
+        editorDisplay.getMenuBar().getItem(Item.SAVE_AS).addActionListener(e -> {
+            JFileChooser save = new JFileChooser();
 
-                    if (save.showSaveDialog(save) == JFileChooser.APPROVE_OPTION) {
-                        currentFile = save.getSelectedFile();
-                        editorDisplay.getStatusBar().setCurrentFileStatus(currentFile.getName());
-                    }
-                }
+            if (save.showSaveDialog(save) == JFileChooser.APPROVE_OPTION) {
+                currentFile = save.getSelectedFile();
+                editorDisplay.getStatusBar().setCurrentFileStatus(currentFile.getName());
 
                 saveFile();
             }
         });
 
-        editorDisplay.getMenuBar().getItem(Item.SAVE_AS).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser save = new JFileChooser();
+        editorDisplay.getMenuBar().getItem(Item.QUIT).addActionListener(e -> System.exit(0));
 
-                if (save.showSaveDialog(save) == JFileChooser.APPROVE_OPTION) {
-                    currentFile = save.getSelectedFile();
-                    editorDisplay.getStatusBar().setCurrentFileStatus(currentFile.getName());
-
-                    saveFile();
-                }
-            }
+        editorDisplay.getMenuBar().getItem(Item.UNDO).addActionListener(e -> {
+            // TODO: Undo/redo logic
         });
 
-        editorDisplay.getMenuBar().getItem(Item.QUIT).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
+        editorDisplay.getMenuBar().getItem(Item.REDO).addActionListener(e -> {
+            // TODO: Undo/redo logic
         });
 
-        editorDisplay.getMenuBar().getItem(Item.UNDO).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO: Undo/redo logic
-            }
+        editorDisplay.getMenuBar().getItem(Item.CUT).addActionListener(e -> editorDisplay.getTextArea().cut());
+
+        editorDisplay.getMenuBar().getItem(Item.COPY).addActionListener(e -> editorDisplay.getTextArea().copy());
+
+        editorDisplay.getMenuBar().getItem(Item.PASTE).addActionListener(e -> editorDisplay.getTextArea().paste());
+
+        editorDisplay.getMenuBar().getItem(Item.FIND).addActionListener(e -> {
+            if (findDisplay.isDisplayOpen()) return;
+            findDisplay.createDisplay();
         });
 
-        editorDisplay.getMenuBar().getItem(Item.REDO).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // TODO: Undo/redo logic
-            }
+        editorDisplay.getMenuBar().getItem(Item.ZOOM_IN).addActionListener(e -> editorDisplay.changeFontSize(ZOOM));
+
+        editorDisplay.getMenuBar().getItem(Item.ZOOM_OUT).addActionListener(e -> editorDisplay.changeFontSize(-ZOOM));
+
+        editorDisplay.getMenuBar().getItem(Item.RESET_ZOOM).addActionListener(e -> editorDisplay.resetFontSize());
+
+        editorDisplay.getMenuBar().getItem(Item.SHOW_STATUS_PANEL).addActionListener(e -> {
+            JCheckBoxMenuItem box = (JCheckBoxMenuItem) editorDisplay.getMenuBar().getItem(Item.SHOW_STATUS_PANEL);
+            editorDisplay.getStatusBar().setVisible(box.getState());
         });
 
-        editorDisplay.getMenuBar().getItem(Item.CUT).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.getTextArea().cut();
-            }
+        editorDisplay.getMenuBar().getItem(Item.CONFIGURE_STYLE).addActionListener(e -> {
+            if (configDisplay.isDisplayOpen()) return;
+            configDisplay.createDisplay();
         });
 
-        editorDisplay.getMenuBar().getItem(Item.COPY).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.getTextArea().copy();
-            }
-        });
+        editorDisplay.getMenuBar().getItem(Item.REPORT_BUG).addActionListener(e -> Link.openLink("https://github.com/skyler948/sedit/issues"));
 
-        editorDisplay.getMenuBar().getItem(Item.PASTE).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.getTextArea().paste();
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.FIND).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (findDisplay.isDisplayOpen()) return;
-                findDisplay.createDisplay();
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.ZOOM_IN).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.changeFontSize(ZOOM);
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.ZOOM_OUT).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.changeFontSize(-ZOOM);
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.RESET_ZOOM).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editorDisplay.resetFontSize();
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.SHOW_STATUS_PANEL).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem box = (JCheckBoxMenuItem) editorDisplay.getMenuBar().getItem(Item.SHOW_STATUS_PANEL);
-                editorDisplay.getStatusBar().setVisible(box.getState());
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.CONFIGURE_STYLE).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (configDisplay.isDisplayOpen()) return;
-                configDisplay.createDisplay();
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.REPORT_BUG).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Link.openLink("https://github.com/skyler948/sedit/issues");
-            }
-        });
-
-        editorDisplay.getMenuBar().getItem(Item.ABOUT_SEDIT).addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (aboutDisplay.isDisplayOpen()) return;
-                aboutDisplay.createDisplay();
-            }
+        editorDisplay.getMenuBar().getItem(Item.ABOUT_SEDIT).addActionListener(e -> {
+            if (aboutDisplay.isDisplayOpen()) return;
+            aboutDisplay.createDisplay();
         });
     }
 

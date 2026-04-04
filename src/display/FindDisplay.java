@@ -1,6 +1,7 @@
 package display;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -68,37 +69,34 @@ public class FindDisplay extends Display {
 
         frame.add(panel);
 
-        inputButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (caseSensitiveButton.isSelected()) {
-                    recentIndex = findSubstringIndex(display.getTextArea().getText(), inputField.getText(), globalIndex);
-                } else {
-                    recentIndex = findSubstringIndex(display.getTextArea().getText().toLowerCase(Locale.ROOT),
-                            inputField.getText().toLowerCase(Locale.ROOT), globalIndex);
-                }
+        inputButton.addActionListener(e -> {
+            if (caseSensitiveButton.isSelected()) {
+                recentIndex = findSubstringIndex(display.getTextArea().getText(), inputField.getText(), globalIndex);
+            } else {
+                recentIndex = findSubstringIndex(display.getTextArea().getText().toLowerCase(Locale.ROOT),
+                        inputField.getText().toLowerCase(Locale.ROOT), globalIndex);
+            }
 
-                if (recentIndex != -1) {
-                    globalIndex = recentIndex + inputField.getText().length();
+            if (recentIndex != -1) {
+                globalIndex = recentIndex + inputField.getText().length();
 
-                    display.getTextArea().setSelectionStart(recentIndex);
-                    display.getTextArea().setSelectionEnd(globalIndex);
-                } else {
-                    globalIndex = 0;
+                display.getTextArea().setSelectionStart(recentIndex);
+                display.getTextArea().setSelectionEnd(globalIndex);
+            } else {
+                globalIndex = 0;
 
-                    display.getTextArea().setSelectionStart(0);
-                    display.getTextArea().setSelectionEnd(0);
-                }
-                infoLabel.setText("Found text at index: " + (recentIndex == -1 ? "None" : recentIndex));
+                display.getTextArea().setSelectionStart(0);
+                display.getTextArea().setSelectionEnd(0);
+            }
+
+            try {
+                infoLabel.setText("Found text on line: " + (recentIndex == -1 ? "None" : display.getTextArea().getLineOfOffset(recentIndex)));
+            } catch (BadLocationException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
-        caseSensitiveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resetSearchIndex();
-            }
-        });
+        caseSensitiveButton.addActionListener(e -> resetSearchIndex());
     }
 
     private int findSubstringIndex(String docstring, String substring, int startingIndex) {

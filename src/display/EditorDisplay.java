@@ -46,6 +46,8 @@ public class EditorDisplay extends Display {
         frame.add(statusBar, BorderLayout.SOUTH);
 
         menuBarHandler = new MenuBarHandler(this);
+
+        textArea.addCaretListener(e -> statusBar.setCaretPositionStatus());
     }
 
     @Override

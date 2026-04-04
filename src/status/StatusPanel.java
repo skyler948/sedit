@@ -4,11 +4,13 @@ import display.EditorDisplay;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import javax.swing.text.BadLocationException;
 
 public class StatusPanel extends JPanel {
 
     private JLabel currentFileStatus;
     private JLabel fontSizeStatus;
+    private JLabel caretPositionStatus;
 
     private EditorDisplay editorDisplay;
 
@@ -28,8 +30,23 @@ public class StatusPanel extends JPanel {
         fontSizeStatus = new JLabel();
         setFontSizeStatus();
 
+        caretPositionStatus = new JLabel();
+        setCaretPositionStatus();
+
         add(currentFileStatus);
         add(fontSizeStatus);
+        add(caretPositionStatus);
+    }
+
+    public void setCaretPositionStatus() {
+        try {
+            int row = editorDisplay.getTextArea().getLineOfOffset(editorDisplay.getTextArea().getCaretPosition());
+            int column = editorDisplay.getTextArea().getCaretPosition() - editorDisplay.getTextArea().getLineStartOffset(row);
+
+            caretPositionStatus.setText(" | " + row + ":" + column);
+        } catch (BadLocationException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void setCurrentFileStatus(String currentFileStatus) {
